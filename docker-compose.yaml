@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: postgres-nakama-container
+    environment:
+      POSTGRES_DB: nakama_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+volumes:
+  db-data:

@@ -7,14 +7,24 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/kandlagifari/go-nakama-apps/internal/store"
 )
 
 type application struct {
 	config config
+	store  store.Storage
 }
 
 type config struct {
 	addr string
+	db   dbConfig
+}
+
+type dbConfig struct {
+	addr         string
+	maxOpenConns int
+	maxIdleConns int
+	maxIdleTime  string
 }
 
 func (app *application) mount() http.Handler {

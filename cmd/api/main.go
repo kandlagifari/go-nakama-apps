@@ -1,10 +1,14 @@
 package main
 
-import "log"
+import (
+	"log"
+
+	"github.com/kandlagifari/go-nakama-apps/internal/env"
+)
 
 func main() {
 	cfg := config{
-		addr: ":6969",
+		addr: env.GetString("ADDR", ":8080"),
 	}
 
 	app := &application{

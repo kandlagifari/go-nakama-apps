@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/kandlagifari/go-nakama-apps/internal/auth"
 	"github.com/kandlagifari/go-nakama-apps/internal/db"
 	"github.com/kandlagifari/go-nakama-apps/internal/env"
 	"github.com/kandlagifari/go-nakama-apps/internal/store"
@@ -47,6 +48,11 @@ func main() {
 				user: env.GetString("AUTH_BASIC_USER", "admin"),
 				pass: env.GetString("AUTH_BASIC_PASS", "admin"),
 			},
+			token: tokenConfig{
+				secret: env.GetString("AUTH_TOKEN_SECRET", "secret"),
+				exp:    time.Hour * 24 * 3, // 3 days
+				issuer: "nakamafamilia",
+			},
 		},
 	}
 
@@ -68,12 +74,20 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection pool established")
 
+	// Authenticator
+	jwtAuthenticator := auth.NewJWTAuthenticator(
+		cfg.auth.token.secret,
+		cfg.auth.token.issuer,
+		cfg.auth.token.issuer,
+	)
+
 	store := store.NewStorage(db)
 
 	app := &application{
-		config: cfg,
-		store:  store,
-		logger: logger,
+		config:        cfg,
+		store:         store,
+		logger:        logger,
+		authenticator: jwtAuthenticator,
 	}
 
 	mux := app.mount()

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net/http"
 	"strconv"
 
@@ -35,10 +34,6 @@ func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type FollowUser struct {
-	UserID int64 `json:"user_id"`
-}
-
 // FollowUser godoc
 //
 //	@Summary		Follows a user
@@ -55,15 +50,15 @@ type FollowUser struct {
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
 	followerUser := getUserFromContext(r)
 
-	var payload FollowUser
-	if err := readJSON(w, r, &payload); err != nil {
+	followedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
+	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
 	ctx := r.Context()
 
-	if err := app.store.Followers.Follow(ctx, payload.UserID, followerUser.ID); err != nil {
+	if err := app.store.Followers.Follow(ctx, followedID, followerUser.ID); err != nil {
 		switch err {
 		case store.ErrConflict:
 			app.conflictResponse(w, r, err)
@@ -93,17 +88,16 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 //	@Security		ApiKeyAuth
 //	@Router			/users/{userID}/unfollow [put]
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
-	unfollowedUser := getUserFromContext(r)
+	followerUser := getUserFromContext(r)
 
-	var payload FollowUser
-	if err := readJSON(w, r, &payload); err != nil {
+	unfollowedID, err := strconv.ParseInt(chi.URLParam(r, "userID"), 10, 64)
+	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
-
 	ctx := r.Context()
 
-	if err := app.store.Followers.Unfollow(ctx, payload.UserID, unfollowedUser.ID); err != nil {
+	if err := app.store.Followers.Unfollow(ctx, followerUser.ID, unfollowedID); err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
@@ -113,34 +107,34 @@ func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (app *application) userContextMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		idParam := chi.URLParam(r, "userID")
-		id, err := strconv.ParseInt(idParam, 10, 64)
-		if err != nil {
-			app.badRequestResponse(w, r, err)
-			return
-		}
+// func (app *application) userContextMiddleware(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		idParam := chi.URLParam(r, "userID")
+// 		id, err := strconv.ParseInt(idParam, 10, 64)
+// 		if err != nil {
+// 			app.badRequestResponse(w, r, err)
+// 			return
+// 		}
 
-		ctx := r.Context()
+// 		ctx := r.Context()
 
-		user, err := app.store.Users.GetByID(ctx, id)
-		if err != nil {
-			switch err {
-			case store.ErrNotFound:
-				app.notFoundResponse(w, r, err)
-				return
-			default:
-				app.internalServerError(w, r, err)
-				return
-			}
-		}
+// 		user, err := app.store.Users.GetByID(ctx, id)
+// 		if err != nil {
+// 			switch err {
+// 			case store.ErrNotFound:
+// 				app.notFoundResponse(w, r, err)
+// 				return
+// 			default:
+// 				app.internalServerError(w, r, err)
+// 				return
+// 			}
+// 		}
 
-		ctx = context.WithValue(ctx, userCtx, user)
+// 		ctx = context.WithValue(ctx, userCtx, user)
 
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+// }
 
 // ActivateUser godoc
 //

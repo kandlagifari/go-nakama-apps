@@ -159,7 +159,6 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 	post := getPostFromCtx(r)
 
 	var payload UpdatePostPayload
-
 	if err := readJSON(w, r, &payload); err != nil {
 		app.badRequestResponse(w, r, err)
 		return

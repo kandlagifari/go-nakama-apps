@@ -1,13 +1,17 @@
 include .envrc
+VOLUME_NAME = go-nakama-apps_db-data
 MIGRATIONS_PATH = ./cmd/migrate/migrations
+IMAGE_NAME = kandlagifari/nakama-app
+IMAGE_TAG = latest
 
 .PHONY: compose-up
 compose-up:
-	docker compose up --build -d
+	@docker compose up --build -d
 
 .PHONY: compose-down
 compose-down:
-	docker compose down
+	@docker compose down
+	@docker volume rm ${VOLUME_NAME}
 
 .PHONY: migrate-create
 migrate-create:
@@ -24,6 +28,19 @@ migrate-down:
 .PHONY: generate-docs
 generate-docs:
 	@swag init -g ./api/main.go -d cmd,internal && swag fmt
+
+.PHONY: build
+build:
+	@docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
+
+.PHONY: push
+push:
+	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+	@docker push $(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: clean
+clean:
+	@docker rm -f nakama-api
 
 # .PHONY: seed
 # seed: 

@@ -1,7 +1,7 @@
 include .envrc
 VOLUME_NAME = go-nakama-apps_db-data
 MIGRATIONS_PATH = ./cmd/migrate/migrations
-IMAGE_NAME = kandlagifari/nakama-app
+IMAGE_NAME = kandlagifari/nakama-api
 IMAGE_TAG = latest
 
 .PHONY: compose-up
@@ -40,7 +40,7 @@ push:
 
 .PHONY: clean
 clean:
-	@docker rm -f nakama-api
+	@docker rm -f nakama-api-container
 
 # .PHONY: seed
 # seed: 

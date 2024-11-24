@@ -74,14 +74,14 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection pool established")
 
+	store := store.NewStorage(db)
+
 	// Authenticator
 	jwtAuthenticator := auth.NewJWTAuthenticator(
 		cfg.auth.token.secret,
 		cfg.auth.token.issuer,
 		cfg.auth.token.issuer,
 	)
-
-	store := store.NewStorage(db)
 
 	app := &application{
 		config:        cfg,

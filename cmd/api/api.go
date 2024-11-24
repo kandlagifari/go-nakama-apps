@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/kandlagifari/go-nakama-apps/docs"
 	"github.com/kandlagifari/go-nakama-apps/internal/auth"
 	"github.com/kandlagifari/go-nakama-apps/internal/store"
@@ -84,8 +84,8 @@ func (app *application) mount() http.Handler {
 				r.Use(app.postsContextMiddleware)
 
 				r.Get("/", app.getPostHandler)
-				r.Delete("/", app.checkPostOwnership("admin", app.deletePostHandler))
-				r.Patch("/", app.checkPostOwnership("moderator", app.updatePostHandler))
+				r.Delete("/", app.deletePostHandler)
+				r.Patch("/", app.updatePostHandler)
 			})
 		})
 

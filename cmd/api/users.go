@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/kandlagifari/go-nakama-apps/internal/store"
 )
 
@@ -58,7 +58,7 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 
 	ctx := r.Context()
 
-	if err := app.store.Followers.Follow(ctx, followedID, followerUser.ID); err != nil {
+	if err := app.store.Followers.Follow(ctx, followerUser.ID, followedID); err != nil {
 		switch err {
 		case store.ErrConflict:
 			app.conflictResponse(w, r, err)

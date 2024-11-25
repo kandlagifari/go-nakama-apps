@@ -100,10 +100,10 @@ func (app *application) mount() http.Handler {
 				r.Put("/unfollow", app.unfollowUserHandler)
 			})
 
-			r.Group(func(r chi.Router) {
-				r.Use(app.AuthTokenMiddleware)
-				r.Get("/feed", app.getUserFeedHandler)
-			})
+			// r.Group(func(r chi.Router) {
+			// 	r.Use(app.AuthTokenMiddleware)
+			// 	r.Get("/feed", app.getUserFeedHandler)
+			// })
 		})
 
 		// Public routes

@@ -18,6 +18,22 @@ Tagline: **"Nakama: Connecting Communities, Sharing Moments."**
     - [Step 7: Seeding Our Database with Dummy Data](#step-7-seeding-our-database-with-dummy-data)
     - [Step 8: Build and Push Container Image (Optional)](#step-8-build-and-push-container-image-optional)
     - [Step 9: Run Our Application](#step-9-run-our-application)
+  - [Usage](#usage)
+    - [Endpoint 1: Authentication API (Public Endpoint)](#endpoint-1-authentication-api-public-endpoint)
+      - [1. User Registration](#1-user-registration)
+      - [2. User Create JWT](#2-user-create-jwt)
+    - [Endpoint 2: Health API (Access Using Basic Auth)](#endpoint-2-health-api-access-using-basic-auth)
+      - [1. System Healthcheck](#1-system-healthcheck)
+    - [Endpoint 3: Posts API (Access Using JWT)](#endpoint-3-posts-api-access-using-jwt)
+      - [1. Create Post](#1-create-post)
+      - [2. Get Post by ID](#2-get-post-by-id)
+      - [3. Delete Post](#3-delete-post)
+      - [4. Update Post](#4-update-post)
+    - [Endpoint 4: Users API (Access Using JWT, except for Activate User Token Endpoint)](#endpoint-4-users-api-access-using-jwt-except-for-activate-user-token-endpoint)
+      - [1. Activate User Token (Public)](#1-activate-user-token-public)
+      - [2. Get User by ID](#2-get-user-by-id)
+      - [3. Follow User](#3-follow-user)
+      - [4. Unfollow User](#4-unfollow-user)
 
 ## Key Features
 
@@ -28,7 +44,6 @@ Tagline: **"Nakama: Connecting Communities, Sharing Moments."**
 2. **Post Interaction**:
    - Create, read, update, delete (CRUD) posts.
    - Add comments to posts.
-   - Supports pagination and tagging.
 
 3. **Follower System**:
    - Follow and manage followers.
@@ -277,3 +292,268 @@ docker run -d -p 6969:6969 \
 ```
 
 The server will be running on http://{{Public-IP}}:6969
+
+## Usage
+
+### Endpoint 1: Authentication API (Public Endpoint)
+
+#### 1. User Registration
+- **POST** `/v1/authentication/user` 
+  - **Description**: Register a user.
+  - **Request Body**:
+    ```json
+    {
+      "email": "sleepingknight1@mail.com",
+      "password": "sleepingknight1",
+      "username": "sleepingknight1"
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+        "data": {
+            "id": 101,
+            "username": "sleepingknight1",
+            "email": "sleepingknight1@mail.com",
+            "created_at": "2024-11-25T01:36:45Z",
+            "is_active": false,
+            "token": "e1b904a1-19f9-4cd3-9be5-4bdcfd1789b0"
+        }
+    }
+    ```
+    ![Alt text](images/04_user-registration.png)
+
+#### 2. User Create JWT
+- **POST** `/v1/authentication/token`
+  - **Description**: Creates a token (The token that provided on the response will be needed to access private endpoints).
+  - **Request Body**:
+    ```json
+    {
+      "email": "sleepingknight1@mail.com",
+      "password": "sleepingknight1"
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+      "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJuYWthbWFmYW1pbGlhIiwiZXhwIjoxNzMyNzU4ODA1LCJpYXQiOjE3MzI0OTk2MDUsImlzcyI6Im5ha2FtYWZhbWlsaWEiLCJuYmYiOjE3MzI0OTk2MDUsInN1YiI6MTAxfQ.JZLc3eBQo_uc0nFbe3n340ldBdkg1mrfDGkLcML0HTU"
+    }
+    ```
+    ![Alt text](images/06_user-create-jwt.png)
+
+---
+
+### Endpoint 2: Health API (Access Using Basic Auth)
+
+#### 1. System Healthcheck
+- **GET** `/v1/health`
+  - **Description**: Healthcheck.
+  - **Basic Auth**:
+    ```txt
+    Username: your_username
+    Password: your_password
+    ```
+  - **Response**: 
+    ```json
+    {
+        "data": {
+            "env": "production",
+            "status": "ok",
+            "version": "0.0.1"
+        }
+    }
+    ```
+    ![Alt text](images/07_system-health-check.png)
+
+---
+
+### Endpoint 3: Posts API (Access Using JWT)
+
+#### 1. Create Post 
+- **POST** `/v1/posts`
+  - **Description**: Creates a post.
+  - **Request Body**:
+    ```json
+    {
+      "content": "Content 1",
+      "tags": [
+        "Tag1",
+        "Tag2"
+      ],
+      "title": "Title 1"
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+        "data": {
+            "id": 201,
+            "content": "Content 1",
+            "title": "Title 1",
+            "user_id": 101,
+            "tags": [
+                "Tag1",
+                "Tag2"
+            ],
+            "created_at": "2024-11-25T02:04:21Z",
+            "updated_at": "2024-11-25T02:04:21Z",
+            "version": 0,
+            "comments": null,
+            "user": {
+                "id": 0,
+                "username": "",
+                "email": "",
+                "created_at": "",
+                "is_active": false
+            }
+        }
+    }
+    ```
+    ![Alt text](images/08_create-post.png)
+
+#### 2. Get Post by ID
+- **GET** `/v1/posts{id}` 
+  - **Description**: Fetches a post.
+  - **Parameter**:
+    ```txt
+    "id": 201,
+    ```
+  - **Response**:
+    ```json
+    {
+        "data": {
+            "id": 201,
+            "content": "Content 1",
+            "title": "Title 1",
+            "user_id": 101,
+            "tags": [
+                "Tag1",
+                "Tag2"
+            ],
+            "created_at": "2024-11-25T02:04:21Z",
+            "updated_at": "2024-11-25T02:04:21Z",
+            "version": 0,
+            "comments": [],
+            "user": {
+                "id": 0,
+                "username": "",
+                "email": "",
+                "created_at": "",
+                "is_active": false
+            }
+        }
+    }
+    ```
+    ![Alt text](images/09_get-post-by-id.png)
+
+#### 3. Delete Post 
+- **DELETE** `/v1/posts{id}` 
+  - **Description**: Deletes a post.
+  - **Parameter**:
+    ```txt
+    "id": 201,
+    ```
+  - **Response**:
+    ```json
+    
+    ```
+    ![Alt text](images/10_delete-post.png)
+
+#### 4. Update Post 
+- **PUT** `/v1/posts{id}` 
+  - **Description**: Deletes a post.
+  - **Parameter**:
+    ```txt
+    "id": 201,
+    ```
+  - **Response**:
+    ```json
+    {
+        "data": {
+            "id": 202,
+            "content": "Content 1 Updated",
+            "title": "Title 1 Updated",
+            "user_id": 101,
+            "tags": [
+                "Tag1",
+                "Tag2"
+            ],
+            "created_at": "2024-11-25T02:13:00Z",
+            "updated_at": "2024-11-25T02:13:00Z",
+            "version": 1,
+            "comments": null,
+            "user": {
+                "id": 0,
+                "username": "",
+                "email": "",
+                "created_at": "",
+                "is_active": false
+            }
+        }
+    }
+    ```
+    ![Alt text](images/11_update-post.png)
+
+---
+
+### Endpoint 4: Users API (Access Using JWT, except for Activate User Token Endpoint)
+
+#### 1. Activate User Token (Public)
+- **PUT** `/v1/users/activate/{token}` 
+  - **Description**: Activates/Register a user.
+  - **Parameter**:
+    ```txt
+    "token": "e1b904a1-19f9-4cd3-9be5-4bdcfd1789b0",
+    ```
+  - **Response**:
+    ```json
+    
+    ```
+    ![Alt text](images/05_activate-user-token.png)
+
+#### 2. Get User by ID
+- **GET** `/v1/users/{id}` 
+  - **Description**: Fetches a user profile.
+  - **Parameter**:
+    ```txt
+    "id": 101,
+    ```
+  - **Response**:
+    ```json
+    {
+        "data": {
+            "id": 101,
+            "username": "sleepingknight1",
+            "email": "sleepingknight1@mail.com",
+            "created_at": "2024-11-25T01:36:45Z",
+            "is_active": false
+        }
+    }
+    ```
+    ![Alt text](images/12_get-user-by-id.png)
+
+#### 3. Follow User 
+- **PUT** `/v1/users/{id}/follow`  
+  - **Description**: Follows a user.
+  - **Parameter**:
+    ```txt
+    "id": 16,
+    ```
+  - **Response**:
+    ```json
+    
+    ```
+    ![Alt text](images/13_follow-user.png)
+
+#### 4. Unfollow User
+- **PUT** `/v1/users/{id}/unfollow`  
+  - **Description**: Unfollows a user.
+  - **Parameter**:
+    ```txt
+    "id": 16,
+    ```
+  - **Response**:
+    ```json
+    
+    ```
+    ![Alt text](images/14_unfollow-user.png)

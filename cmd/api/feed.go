@@ -1,11 +1,5 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/kandlagifari/go-nakama-apps/internal/store"
-)
-
 // getUserFeedHandler godoc
 //
 //	@Summary		Fetches the user feed
@@ -25,36 +19,35 @@ import (
 //	@Failure		500		{object}	error
 //	@Security		ApiKeyAuth
 //	@Router			/users/feed [get]
-func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Request) {
-	fq := store.PaginatedFeedQuery{
-		Limit:  10,
-		Offset: 0,
-		Sort:   "desc",
-		Tags:   []string{},
-		Search: "",
-	}
+// func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Request) {
+// 	fq := store.PaginatedFeedQuery{
+// 		Limit:  20,
+// 		Offset: 0,
+// 		Sort:   "desc",
+// 	}
 
-	fq, err := fq.Parse(r)
-	if err != nil {
-		app.badRequestResponse(w, r, err)
-		return
-	}
+// 	fq, err := fq.Parse(r)
+// 	if err != nil {
+// 		app.badRequestResponse(w, r, err)
+// 		return
+// 	}
 
-	if err := Validate.Struct(fq); err != nil {
-		app.badRequestResponse(w, r, err)
-		return
-	}
+// 	if err := Validate.Struct(fq); err != nil {
+// 		app.badRequestResponse(w, r, err)
+// 		return
+// 	}
 
-	ctx := r.Context()
-	user := getUserFromContext(r)
+// 	log.Println(fq.Search)
 
-	feed, err := app.store.Posts.GetUserFeed(ctx, user.ID, fq)
-	if err != nil {
-		app.internalServerError(w, r, err)
-		return
-	}
+// 	ctx := r.Context()
 
-	if err := app.jsonResponse(w, http.StatusOK, feed); err != nil {
-		app.internalServerError(w, r, err)
-	}
-}
+// 	feed, err := app.store.Posts.GetUserFeed(ctx, int64(341), fq)
+// 	if err != nil {
+// 		app.internalServerError(w, r, err)
+// 		return
+// 	}
+
+// 	if err := app.jsonResponse(w, http.StatusOK, feed); err != nil {
+// 		app.internalServerError(w, r, err)
+// 	}
+// }

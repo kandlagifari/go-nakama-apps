@@ -363,7 +363,7 @@ The server will be running on http://{{Public-IP}}:6969
         }
     }
     ```
-    ![Alt text](images/07_system-health-check.png)
+    ![Alt text](images/07_system-healthcheck.png)
 
 ---
 
@@ -465,6 +465,13 @@ The server will be running on http://{{Public-IP}}:6969
   - **Parameter**:
     ```txt
     "id": 201,
+    ```
+  - **Request Body**:
+    ```json
+    {
+      "content": "Content 1 Updated",
+      "title": "Title 1 Updated"
+    }
     ```
   - **Response**:
     ```json

@@ -3,6 +3,7 @@ VOLUME_NAME = go-nakama-apps_db-data
 MIGRATIONS_PATH = ./cmd/migrate/migrations
 IMAGE_NAME = kandlagifari/nakama-api
 IMAGE_TAG = latest
+CONTAINER_NAME = nakama-api-container
 
 .PHONY: compose-up
 compose-up:
@@ -40,7 +41,8 @@ push:
 
 .PHONY: clean
 clean:
-	@docker rm -f nakama-api-container
+	@docker ps -a --filter "name=$(CONTAINER_NAME)" -q | xargs docker rm -f
+	@docker images --filter "reference=$(IMAGE_NAME)" -q | xargs docker rmi -f
 
 # .PHONY: seed
 # seed: 

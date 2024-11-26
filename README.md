@@ -285,6 +285,8 @@ docker run -d -p 6969:6969 \
     -e DB_MAX_IDLE_TIME="15m" \
     -e AUTH_BASIC_USER="username" \
     -e AUTH_BASIC_PASS="password" \
+    -e REDIS_ADDR="172.20.0.1:6379" \
+    -e REDIS_ENABLED=true \
     kandlagifari/nakama-api:latest
 
 # e0c5e4836159627b6358be01b4ad89d3b6394c86b083072e41b23aa8d6624530

@@ -20,6 +20,8 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
+    networks:
+      - nakama-network
 
   redis-commander:
     container_name: nakama-redis-commander
@@ -33,6 +35,8 @@ services:
       - redis
     restart:
       unless-stopped
+    networks:
+      - nakama-network
   
 volumes:
   db-data:

@@ -10,6 +10,7 @@ import (
 	"github.com/kandlagifari/go-nakama-apps/docs"
 	"github.com/kandlagifari/go-nakama-apps/internal/auth"
 	"github.com/kandlagifari/go-nakama-apps/internal/store"
+	"github.com/kandlagifari/go-nakama-apps/internal/store/cache"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 )
@@ -17,17 +18,26 @@ import (
 type application struct {
 	config        config
 	store         store.Storage
+	cacheStorage  cache.Storage
 	logger        *zap.SugaredLogger
 	authenticator auth.Authenticator
 }
 
 type config struct {
-	addr   string
-	db     dbConfig
-	env    string
-	apiURL string
-	mail   mailConfig
-	auth   authConfig
+	addr     string
+	db       dbConfig
+	env      string
+	apiURL   string
+	mail     mailConfig
+	auth     authConfig
+	redisCfg redisConfig
+}
+
+type redisConfig struct {
+	addr    string
+	pw      string
+	db      int
+	enabled bool
 }
 
 type authConfig struct {

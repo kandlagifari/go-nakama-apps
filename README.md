@@ -13,7 +13,7 @@ Tagline: **"Nakama: Connecting Communities, Sharing Moments."**
     - [Step 2: Clone the Repository](#step-2-clone-the-repository)
     - [Step 3: Install dependencies](#step-3-install-dependencies)
     - [Step 4: Set up your environment variables file](#step-4-set-up-your-environment-variables-file)
-    - [Step 5: Run Postgres Container](#step-5-run-postgres-container)
+    - [Step 5: Run Postgres and Redis Container](#step-5-run-postgres-and-redis-container)
     - [Step 6: Run Database Migration](#step-6-run-database-migration)
     - [Step 7: Seeding Our Database with Dummy Data](#step-7-seeding-our-database-with-dummy-data)
     - [Step 8: Build and Push Container Image (Optional)](#step-8-build-and-push-container-image-optional)
@@ -195,15 +195,14 @@ go mod tidy
    POSTGRES_PASSWORD=<your_db_password> # postgres
    ```
 
-### Step 5: Run Postgres Container
+### Step 5: Run Postgres and Redis Container
 ```shell
 make compose-up
 
 # WARN[0000] /path/to/file/docker-compose.yaml: `version` is obsolete
-# [+] Running 3/3
-#  ✔ Network go-nakama-apps_nakama-network  Created                                                                                         0.1s
-#  ✔ Volume "go-nakama-apps_db-data"        Created                                                                                         0.0s
-#  ✔ Container nakama-postgres-container    Started                                                                                         0.4s
+# ✔ Container nakama-redis-container     Running                                                                                           0.0s
+# ✔ Container nakama-postgres-container  Running                                                                                           0.0s
+# ✔ Container nakama-redis-commander     Running                                                                                           0.0s
 ```
 
 ### Step 6: Run Database Migration

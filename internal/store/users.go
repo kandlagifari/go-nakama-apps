@@ -80,7 +80,7 @@ func (s *UserStore) Create(ctx context.Context, tx *sql.Tx, user *User) error {
 
 func (s *UserStore) GetByID(ctx context.Context, userID int64) (*User, error) {
 	query := `
-		SELECT id, username, email, password, created_at
+		SELECT id, username, email, password, created_at, is_active
 		FROM users
 		WHERE id = $1
 	`
@@ -99,6 +99,7 @@ func (s *UserStore) GetByID(ctx context.Context, userID int64) (*User, error) {
 		&user.Email,
 		&user.Password.hash,
 		&user.CreatedAt,
+		&user.IsActive,
 	)
 	if err != nil {
 		switch err {

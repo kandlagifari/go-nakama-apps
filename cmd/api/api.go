@@ -109,11 +109,11 @@ func (app *application) mount() http.Handler {
 				r.Put("/follow", app.followUserHandler)
 				r.Put("/unfollow", app.unfollowUserHandler)
 			})
+		})
 
-			r.Group(func(r chi.Router) {
-				r.Use(app.AuthTokenMiddleware)
-				r.Get("/feed", app.getUserFeedHandler)
-			})
+		r.Route("/feed", func(r chi.Router) {
+			r.Use(app.AuthTokenMiddleware)
+			r.Get("/user", app.getUserFeedHandler)
 		})
 
 		// Public routes

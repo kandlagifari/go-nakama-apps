@@ -286,6 +286,7 @@ docker run -d -p 6969:6969 \
     -e AUTH_BASIC_USER="username" \
     -e AUTH_BASIC_PASS="password" \
     -e REDIS_ADDR="172.20.0.1:6379" \
+    -e REDIS_PW="password" \
     -e REDIS_ENABLED=true \
     kandlagifari/nakama-api:latest
 

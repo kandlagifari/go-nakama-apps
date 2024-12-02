@@ -36,6 +36,7 @@ Tagline: **"Nakama: Connecting Communities, Sharing Moments."**
       - [4. Unfollow User](#4-unfollow-user)
   - [Operational Testing](#operational-testing)
     - [1. Redis Performance Testing](#1-redis-performance-testing)
+    - [2. Graceful Shutdown Testing](#2-graceful-shutdown-testing)
 
 ## Key Features
 
@@ -577,3 +578,7 @@ npx autocannon http://localhost:6969/v1/users/101 --connections 10 --duration 5 
 ```
 
 ![Alt text](images/00_redis-benchmark.png)
+
+### 2. Graceful Shutdown Testing
+
+![Alt text](images/00_graceful-shutdown.gif)

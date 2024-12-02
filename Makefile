@@ -44,6 +44,10 @@ clean:
 	@docker ps -a --filter "name=$(CONTAINER_NAME)" -q | xargs docker rm -f
 	@docker images --filter "reference=$(IMAGE_NAME)" -q | xargs docker rmi -f
 
+.PHONY: test
+test:
+	@go test -v ./...
+
 # .PHONY: seed
 # seed: 
 # 	@go run cmd/migrate/seed/main.go

@@ -34,6 +34,8 @@ Tagline: **"Nakama: Connecting Communities, Sharing Moments."**
       - [2. Get User by ID](#2-get-user-by-id)
       - [3. Follow User](#3-follow-user)
       - [4. Unfollow User](#4-unfollow-user)
+  - [Operational Testing](#operational-testing)
+    - [1. Redis Performance Testing](#1-redis-performance-testing)
 
 ## Key Features
 
@@ -565,3 +567,13 @@ The server will be running on http://{{Public-IP}}:6969
     
     ```
     ![Alt text](images/14_unfollow-user.png)
+
+## Operational Testing
+
+### 1. Redis Performance Testing
+
+```shell
+npx autocannon http://localhost:6969/v1/users/101 --connections 10 --duration 5 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJuYWthbWFmYW1pbGlhIiwiZXhwIjoxNzMzMzcwNjczLCJpYXQiOjE3MzMxMTE0NzMsImlzcyI6Im5ha2FtYWZhbWlsaWEiLCJuYmYiOjE3MzMxMTE0NzMsInN1YiI6MTAxfQ.fC_fI6sPOo8QckHo2LWu9QhHnzr1Ars9tgeVrbSsV-E"
+```
+
+![Alt text](images/00_redis-benchmark.png)
